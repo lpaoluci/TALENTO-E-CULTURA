@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Central de ajuda Buk – Pesquisas e Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F5F7FD; --surface:#FFFFFF; --sky:#E4EBFC; --sky-2:#CBD8F8;
+  --blue:#2B47A6; --blue-deep:#1E3285; --sun:#F7B52C; --sun-soft:#FFF3D6;
+  --ink:#1A2242; --muted:#5A6386; --line:#D6DDF0;
+  --ok:#1F8A5B; --ok-soft:#DFF5EA; --bad:#C9353A; --bad-soft:#FBE3E4; --mid:#B97A00; --mid-soft:#FFF1CF;
+  --side-bg:#2B47A6; --side-ink:#FFFFFF; --side-muted:#C8D3F5;
+  --font:"Source Sans 3","Source Sans Pro","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0E1430; --surface:#161F45; --sky:#1F2B5E; --sky-2:#2B3A78;
+    --blue:#8FA8FF; --blue-deep:#B9C8FF; --sun:#F7B52C; --sun-soft:#3A3115;
+    --ink:#E9EDFB; --muted:#A3ADD3; --line:#2C3973;
+    --ok:#5FD3A0; --ok-soft:#173C30; --bad:#FF8A8E; --bad-soft:#47202A; --mid:#F7C65A; --mid-soft:#3D3214;
+    --side-bg:#121A3D; --side-ink:#E9EDFB; --side-muted:#9AA6D6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0E1430; --surface:#161F45; --sky:#1F2B5E; --sky-2:#2B3A78;
+  --blue:#8FA8FF; --blue-deep:#B9C8FF; --sun:#F7B52C; --sun-soft:#3A3115;
+  --ink:#E9EDFB; --muted:#A3ADD3; --line:#2C3973;
+  --ok:#5FD3A0; --ok-soft:#173C30; --bad:#FF8A8E; --bad-soft:#47202A; --mid:#F7C65A; --mid-soft:#3D3214;
+  --side-bg:#121A3D; --side-ink:#E9EDFB; --side-muted:#9AA6D6;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:1.0625rem;line-height:1.55}
+img{max-width:100%}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* layout */
+.app{display:grid;grid-template-columns:288px minmax(0,1fr);min-height:100%}
+.side{position:sticky;top:env(safe-area-inset-top,0px);height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));background:var(--side-bg);color:var(--side-ink);display:flex;flex-direction:column;padding:28px 20px 20px;overflow-y:auto}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:inherit;margin-bottom:22px}
+.brand b{font-size:2rem;font-weight:800;letter-spacing:-.02em}
+.brand b::before,.brand b::after{content:"·";color:var(--sun);margin:0 2px}
+.brand span{font-size:.95rem;color:var(--side-muted);line-height:1.2}
+.search{position:relative;margin-bottom:18px}
+.search input{width:100%;font:inherit;font-size:1rem;padding:10px 12px;border-radius:10px;border:1px solid transparent;background:rgba(255,255,255,.14);color:var(--side-ink)}
+.search input::placeholder{color:var(--side-muted)}
+.search input:focus{background:rgba(255,255,255,.22);outline:none;border-color:var(--sun)}
+.results{display:none;margin:-8px 0 16px;background:var(--surface);color:var(--ink);border-radius:10px;max-height:46vh;overflow:auto;box-shadow:0 10px 30px rgba(10,20,60,.35)}
+.results.on{display:block}
+.results a{display:block;padding:10px 12px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line)}
+.results a:hover,.results a:focus{background:var(--sky)}
+.results small{display:block;color:var(--muted);font-size:.82rem}
+.results p{margin:0;padding:12px;color:var(--muted);font-size:.95rem}
+.navgroup{margin:14px 0 6px;font-size:.85rem;color:var(--side-muted);font-weight:600}
+.nav a{display:block;text-decoration:none;color:var(--side-ink);padding:9px 12px;border-radius:10px;margin-bottom:2px;font-weight:600}
+.nav a:hover{background:rgba(255,255,255,.1)}
+.nav a[aria-current="page"]{background:var(--surface);color:var(--blue-deep)}
+.nav .bar{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,.18);margin-top:6px;overflow:hidden}
+.nav a[aria-current="page"] .bar{background:var(--sky)}
+.nav .bar i{display:block;height:100%;width:0;background:var(--sun);transition:width .3s}
+.side-foot{margin-top:auto;padding-top:20px;font-size:.85rem;color:var(--side-muted)}
+.side-foot button{font:inherit;color:var(--side-ink);background:none;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:6px 10px;cursor:pointer}
+
+.topbar{display:none}
+main{min-width:0;padding:40px clamp(20px,5vw,64px) 80px}
+.page{display:none;max-width:860px}
+.page.on{display:block}
+
+/* type */
+h1{font-size:clamp(2.2rem,4.5vw,3.25rem);line-height:1.05;font-weight:800;letter-spacing:-.025em;margin:0 0 14px;color:var(--blue-deep)}
+h2{font-size:1.6rem;line-height:1.2;font-weight:800;margin:56px 0 12px;letter-spacing:-.01em;color:var(--ink)}
+h3{font-size:1.2rem;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px;max-width:70ch}
+.lead{font-size:1.25rem;color:var(--muted);max-width:60ch;margin-bottom:22px}
+ul.plain{padding-left:1.2em;margin:0 0 16px}
+ul.plain li{margin:6px 0;max-width:68ch}
+strong{font-weight:700}
+
+/* menu path */
+.path{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 18px;padding:0;list-style:none}
+.path li{background:var(--blue);color:#fff;font-weight:600;font-size:.95rem;padding:5px 12px;border-radius:999px}
+:root[data-theme="dark"] .path li{color:#0E1430}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .path li{color:#0E1430}}
+.path li+li::before{content:"›";margin:0 10px 0 -2px;color:var(--sun);font-weight:800}
+
+/* page meta strip */
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:0 0 8px;color:var(--muted);font-size:.95rem}
+.progress{display:flex;align-items:center;gap:10px}
+.progress .track{width:140px;height:8px;background:var(--sky);border-radius:4px;overflow:hidden}
+.progress .track i{display:block;height:100%;width:0;background:var(--sun);transition:width .3s}
+.reset{font:inherit;font-size:.9rem;color:var(--blue);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+
+/* in-page toc */
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px;padding:0;list-style:none}
+.toc a{display:inline-block;text-decoration:none;font-weight:600;font-size:.95rem;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.toc a:hover{border-color:var(--blue);color:var(--blue)}
+
+/* steps */
+.steps{list-style:none;padding:0;margin:12px 0 20px;counter-reset:s}
+.steps li{counter-increment:s}
+.steps button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:40px 1fr;gap:14px;width:100%;padding:12px 14px;border-radius:12px;cursor:pointer;align-items:start}
+.steps button:hover{background:var(--sky)}
+.steps button:focus-visible{outline:3px solid var(--sun)}
+.steps button::before{content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:2px solid var(--blue);color:var(--blue);font-weight:800;font-size:1rem}
+.steps button[aria-pressed="true"]::before{content:"✓";background:var(--ok);border-color:var(--ok);color:#fff}
+.steps button[aria-pressed="true"] .t{color:var(--muted)}
+.steps .t{display:block;max-width:64ch}
+.steps .t b{display:block;font-weight:700;margin-bottom:2px;color:var(--ink)}
+.steps .t small{display:block;color:var(--muted);font-size:.95rem;margin-top:4px}
+.hint{font-size:.9rem;color:var(--muted);margin:-6px 0 12px 14px}
+
+/* callout */
+.note{border-left:5px solid var(--sun);background:var(--sun-soft);padding:14px 18px;border-radius:0 12px 12px 0;margin:18px 0;max-width:70ch}
+.note p:last-child{margin:0}
+.note.info{border-left-color:var(--blue);background:var(--sky)}
+
+/* feature list (definition style, no cards) */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:4px 28px;margin:16px 0 8px;padding:0;list-style:none}
+.feats li{padding:14px 0;border-top:2px solid var(--line)}
+.feats b{display:block;font-size:1.08rem;margin-bottom:3px}
+.feats span{color:var(--muted);font-size:.98rem}
+
+/* tables */
+.tw{overflow-x:auto;margin:14px 0 22px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.98rem}
+th,td{text-align:left;padding:11px 14px;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--sky);font-weight:700}
+tr:last-child td{border-bottom:0}
+
+/* chooser (interactive selector) */
+.chooser{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chooser button{font:inherit;font-weight:600;font-size:.98rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chooser button:hover{border-color:var(--blue)}
+.chooser button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+:root[data-theme="dark"] .chooser button[aria-pressed="true"]{color:#0E1430}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chooser button[aria-pressed="true"]{color:#0E1430}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:8px 0 22px}
+.panel h4{margin:0 0 6px;font-size:1.1rem}
+.panel p{margin:0 0 10px}
+.panel .k{color:var(--muted);font-size:.92rem;display:block;margin-top:10px}
+
+/* question previews */
+.qprev{margin-top:14px;padding:16px;border:1px dashed var(--sky-2);border-radius:12px;background:var(--bg)}
+.qprev .q{font-weight:700;margin-bottom:10px}
+.qprev input[type=text],.qprev textarea{width:100%;font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.qprev textarea{min-height:72px;resize:vertical}
+.qprev label{display:flex;gap:8px;align-items:center;margin:4px 0}
+.qprev .count{font-size:.85rem;color:var(--muted);text-align:right;margin-top:4px}
+.scale{display:flex;gap:6px;flex-wrap:wrap}
+.scale button{font:inherit;font-weight:700;width:40px;height:40px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.scale button.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+.scale-ends{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin-top:6px;max-width:480px}
+.rank{list-style:none;padding:0;margin:0;max-width:420px}
+.rank li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--surface)}
+.rank li span{flex:1}
+.rank button{font:inherit;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+
+/* calculators */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0 24px}
+.calc h4{margin:0 0 4px;font-size:1.15rem}
+.calc .sub{color:var(--muted);font-size:.95rem;margin:0 0 14px}
+.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:10px;margin-bottom:16px}
+.inputs label{display:flex;flex-direction:column;font-size:.88rem;color:var(--muted);font-weight:600}
+.inputs input{font:inherit;font-size:1.05rem;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);margin-top:4px;width:100%}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.out div{padding:14px 16px;border-radius:12px;background:var(--sky)}
+.out b{display:block;font-size:2rem;font-weight:800;line-height:1.1;color:var(--blue-deep)}
+.out span{font-size:.92rem;color:var(--muted)}
+.out em{display:block;font-style:normal;font-weight:700;font-size:.92rem;margin-top:4px}
+.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:14px 0 6px;background:var(--sky)}
+.stack i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.88rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;background:var(--c)}
+
+/* area checker */
+.areas{list-style:none;padding:0;margin:0 0 12px}
+.areas li{display:grid;grid-template-columns:1fr 90px 110px 36px;gap:8px;align-items:center;margin-bottom:8px}
+.areas input{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.tag{display:inline-block;font-weight:700;font-size:.85rem;padding:4px 10px;border-radius:999px;text-align:center}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.icon-btn{font:inherit;width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.btn{font:inherit;font-weight:700;padding:9px 16px;border-radius:10px;border:0;background:var(--blue);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#0E1430}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{color:#0E1430}}
+.btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+
+/* heatmap slider */
+.heat{display:flex;height:22px;border-radius:11px;overflow:hidden;margin:10px 0 4px}
+.heat i{flex:1}
+input[type=range]{width:100%;accent-color:var(--blue)}
+
+/* tabs */
+.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--line);margin:26px 0 8px;scrollbar-width:thin}
+.tabs button{font:inherit;font-weight:700;font-size:1rem;white-space:nowrap;padding:10px 14px;border:0;background:none;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--blue-deep);border-bottom-color:var(--sun)}
+.tabpanel[hidden]{display:none}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:4px 0}
+summary{cursor:pointer;font-weight:700;padding:12px 4px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-weight:800;color:var(--blue);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{padding:0 4px 12px;color:var(--ink)}
+
+/* flow diagram */
+.flow{display:flex;align-items:stretch;gap:0;margin:16px 0 8px;overflow-x:auto;padding-bottom:6px}
+.flow button{font:inherit;flex:1;min-width:150px;text-align:left;padding:14px 16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;position:relative;border-radius:0}
+.flow button:first-child{border-radius:12px 0 0 12px}
+.flow button:last-child{border-radius:0 12px 12px 0}
+.flow button+button{border-left:0}
+.flow button b{display:block;font-size:1.02rem}
+.flow button span{font-size:.88rem;color:var(--muted)}
+.flow button[aria-pressed="true"]{background:var(--sky);border-color:var(--blue);box-shadow:inset 0 -4px 0 var(--sun)}
+
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.status button{font:inherit;text-align:left;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+.status button[aria-pressed="true"]{border-color:var(--blue);background:var(--sky)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:var(--c)}
+
+/* home */
+.home-hero{background:var(--blue);color:#fff;border-radius:20px;padding:clamp(26px,5vw,48px);margin-bottom:34px;position:relative;overflow:hidden}
+:root[data-theme="dark"] .home-hero{background:var(--sky)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .home-hero{background:var(--sky)}}
+.home-hero h1{color:#fff;max-width:14ch}
+:root[data-theme="dark"] .home-hero h1{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .home-hero h1{color:var(--ink)}}
+.home-hero p{font-size:1.2rem;max-width:46ch;opacity:.92}
+.home-hero::after{content:"";position:absolute;right:-60px;bottom:-60px;width:220px;height:220px;border-radius:50%;border:28px solid var(--sun);opacity:.9}
+.modules{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 32px}
+.modules li{border-top:2px solid var(--line)}
+.modules a{display:block;padding:18px 0 20px;text-decoration:none;color:inherit}
+.modules a:hover h3{color:var(--blue)}
+.modules h3{margin:0 0 4px;font-size:1.25rem}
+.modules p{color:var(--muted);margin:0 0 10px;font-size:1rem}
+.modules .mini{display:block;height:4px;border-radius:2px;background:var(--sky);overflow:hidden}
+.modules .mini i{display:block;height:100%;width:0;background:var(--sun)}
+.group-label{font-weight:700;color:var(--muted);margin:30px 0 8px;font-size:1rem}
+
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:60px;padding-top:20px;border-top:2px solid var(--line)}
+.pager a{text-decoration:none;font-weight:700}
+.pager small{display:block;color:var(--muted);font-weight:400}
+.pager .next{text-align:right;margin-left:auto}
+
+mark{background:var(--sun-soft);color:inherit;border-radius:3px;padding:0 2px;box-shadow:0 0 0 2px var(--sun)}
+
+@media (max-width: 900px){
+  .app{grid-template-columns:1fr}
+  .topbar{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;align-items:center;justify-content:space-between;background:var(--side-bg);color:var(--side-ink);padding:12px 18px}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--side-bg)}
+  .topbar .brand{margin:0}
+  .topbar .brand b{font-size:1.5rem}
+  .menu-btn{font:inherit;font-weight:700;color:var(--side-ink);background:rgba(255,255,255,.14);border:0;border-radius:8px;padding:8px 12px;cursor:pointer}
+  .side{position:fixed;z-index:30;inset:0 auto 0 0;width:min(320px,86vw);height:100%;padding-top:calc(24px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-105%);transition:transform .25s}
+  .side.open{transform:none;box-shadow:0 0 0 100vmax rgba(5,10,30,.45)}
+  .side .brand{display:none}
+  main{padding:26px 18px 70px}
+  .areas li{grid-template-columns:1fr 70px 100px 36px}
+}
+@media (max-width:600px){.flow{display:grid;grid-template-columns:1fr 1fr;gap:6px}.flow button,.flow button:first-child,.flow button:last-child{border-radius:12px;min-width:0;border-left:1.5px solid var(--line)}.flow button[aria-pressed="true"]{border-color:var(--blue)}}
+@media print{.side,.topbar,.search,.reset{display:none}.app{display:block}.page{display:block!important;page-break-after:always}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="#inicio"><b>buk</b><span>Central de ajuda</span></a>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="side">Menu</button>
+</div>
+<div class="app">
+<aside class="side" id="side">
+  <a class="brand" href="#inicio"><b>buk</b><span>Central de ajuda<br>Pesquisas e Workflow</span></a>
+  <div class="search">
+    <label for="q" class="sr" style="position:absolute;left:-9999px">Buscar nos manuais</label>
+    <input id="q" type="search" placeholder="Buscar nos manuais" autocomplete="off">
+  </div>
+  <div class="results" id="results" role="listbox" aria-label="Resultados da busca"></div>
+  <nav class="nav" aria-label="Manuais">
+    <a href="#inicio" data-nav="inicio">Início</a>
+    <div class="navgroup">Pesquisas</div>
+    <a href="#livres" data-nav="livres">Pesquisas Livres<span class="bar"><i></i></span></a>
+    <a href="#clima" data-nav="clima">Pesquisas de Clima<span class="bar"><i></i></span></a>
+    <a href="#admin" data-nav="admin">Manual do administrador de Clima<span class="bar"><i></i></span></a>
+    <div class="navgroup">Workflow</div>
+    <a href="#workflow" data-nav="workflow">Apresentação do módulo<span class="bar"><i></i></span></a>
+    <a href="#recursos" data-nav="recursos">O que dá para fazer<span class="bar"><i></i></span></a>
+    <a href="#atributos" data-nav="atributos">Atributos personalizados<span class="bar"><i></i></span></a>
+  </nav>
+  <div class="side-foot">Marque os passos conforme avança. O progresso fica salvo neste navegador.</div>
+</aside>
+<main id="main">
+<!-- INÍCIO -->
+<section class="page" data-page="inicio" aria-labelledby="h-inicio">
+  <div class="home-hero">
+    <h1 id="h-inicio">Pesquisas e Workflow na Buk</h1>
+    <p>Guias passo a passo para configurar pesquisas de clima, pesquisas livres e fluxos de aprovação. Marque cada passo concluído e acompanhe seu progresso.</p>
+  </div>
+  <div class="group-label">Pesquisas</div>
+  <ul class="modules">
+    <li><a href="#livres"><h3>Pesquisas Livres</h3><p>Crie pesquisas sob medida, anônimas ou identificadas, e acompanhe as respostas em tempo real.</p><span class="mini" data-mini="livres"><i></i></span></a></li>
+    <li><a href="#clima"><h3>Pesquisas de Clima</h3><p>Meça o clima com confidencialidade garantida, mapa de calor e análise de sentimentos.</p><span class="mini" data-mini="clima"><i></i></span></a></li>
+    <li><a href="#admin"><h3>Manual do administrador de Clima</h3><p>Metodologia, permissões, leitura dos resultados, perguntas frequentes e planos de ação.</p><span class="mini" data-mini="admin"><i></i></span></a></li>
+  </ul>
+  <div class="group-label">Workflow</div>
+  <ul class="modules">
+    <li><a href="#workflow"><h3>Apresentação do módulo</h3><p>Tipos de fluxo, formulário, permissões, dependências, notificações e gatilho.</p><span class="mini" data-mini="workflow"><i></i></span></a></li>
+    <li><a href="#recursos"><h3>O que dá para fazer</h3><p>Gestão de colaboradores, seleção, integrações e automações disponíveis.</p><span class="mini" data-mini="recursos"><i></i></span></a></li>
+    <li><a href="#atributos"><h3>Atributos personalizados</h3><p>Crie campos próprios e use-os nos formulários dos fluxos.</p><span class="mini" data-mini="atributos"><i></i></span></a></li>
+  </ul>
+</section>
+
+<!-- PESQUISAS LIVRES -->
+<section class="page" data-page="livres" aria-labelledby="h-livres">
+  <h1 id="h-livres">Pesquisas Livres</h1>
+  <p class="lead">Crie suas próprias pesquisas quantas vezes quiser para conhecer a opinião, a satisfação e a percepção dos colaboradores sobre qualquer tema.</p>
+  <div class="meta"><div class="progress"><span class="track"><i></i></span><span class="pct">0 de 0 passos</span></div><button class="reset" type="button">Recomeçar</button></div>
+  <ul class="toc">
+    <li><a href="#livres" data-jump="livres-recursos">Recursos</a></li>
+    <li><a href="#livres" data-jump="livres-criar">Criar a pesquisa</a></li>
+    <li><a href="#livres" data-jump="livres-perguntas">Perguntas</a></li>
+    <li><a href="#livres" data-jump="livres-participantes">Participantes</a></li>
+    <li><a href="#livres" data-jump="livres-notif">Notificações</a></li>
+    <li><a href="#livres" data-jump="livres-relatorios">Relatórios</a></li>
+  </ul>
+
+  <h2 id="livres-recursos">Recursos do módulo</h2>
+  <ul class="feats">
+    <li><b>Pesquisas anônimas</b><span>Para quando as respostas precisam de confidencialidade.</span></li>
+    <li><b>Relatórios</b><span>Acompanhe o andamento online e baixe os resultados.</span></li>
+    <li><b>Lembretes</b><span>Envie lembretes em massa para quem ainda não respondeu.</span></li>
+    <li><b>Compartilhamento</b><span>Dê a outros usuários da Buk acesso de leitura ou de configuração a uma pesquisa específica.</span></li>
+  </ul>
+
+  <h2 id="livres-criar">Criar a pesquisa</h2>
+  <ol class="path"><li>Menu lateral</li><li>Cultura</li><li>Pesquisas</li><li>Livre</li></ol>
+  <ol class="steps">
+    <li><button type="button" data-step="livres-c1"><span class="t"><b>Clique em Nova Pesquisa Livre</b>Comece de um modelo em branco ou reaproveite uma pesquisa criada antes.</span></button></li>
+    <li><button type="button" data-step="livres-c2"><span class="t"><b>Dê um nome e defina as datas</b>As datas de início e término são informativas.</span></button></li>
+    <li><button type="button" data-step="livres-c3"><span class="t"><b>Decida se a pesquisa será anônima</b>Marque Pesquisa Anônima para proteger a identidade. Deixe desmarcado se as respostas devem ficar associadas ao nome de cada participante.</span></button></li>
+  </ol>
+  <div class="note"><p><strong>Atenção:</strong> decida o anonimato antes de começar. Esse é o ponto que mais muda a forma como as pessoas respondem.</p></div>
+
+  <h2 id="livres-perguntas">Montar as perguntas</h2>
+  <p>Em <strong>Adicionar elemento</strong> você cria perguntas, importa perguntas em massa e inclui títulos, parágrafos, imagens e vídeos do YouTube. Use <strong>Pré-visualizar</strong> para ver o formulário como o colaborador verá.</p>
+  <ol class="steps">
+    <li><button type="button" data-step="livres-p1"><span class="t"><b>Escolha o tipo de pergunta</b>Veja abaixo como cada tipo aparece para o colaborador.</span></button></li>
+    <li><button type="button" data-step="livres-p2"><span class="t"><b>Defina se a resposta é obrigatória</b>Marque Resposta obrigatória quando a pergunta não puder ficar em branco.</span></button></li>
+    <li><button type="button" data-step="livres-p3"><span class="t"><b>Clique em Criar Pergunta</b>Repita para cada pergunta do formulário.</span></button></li>
+    <li><button type="button" data-step="livres-p4"><span class="t"><b>Configure as mensagens</b>Notificação de início e de fim, mensagem de boas-vindas e de encerramento do formulário.</span></button></li>
+  </ol>
+  <h3>Tipos de pergunta</h3>
+  <p>Toque em um tipo para ver um exemplo funcionando.</p>
+  <div class="chooser" data-qset="livres" role="group" aria-label="Tipos de pergunta">
+    <button type="button" data-q="curta" aria-pressed="true">Resposta curta</button>
+    <button type="button" data-q="paragrafo" aria-pressed="false">Parágrafo</button>
+    <button type="button" data-q="unica" aria-pressed="false">Seleção única</button>
+    <button type="button" data-q="multipla" aria-pressed="false">Seleção múltipla</button>
+    <button type="button" data-q="linear" aria-pressed="false">Escala linear</button>
+    <button type="button" data-q="importancia" aria-pressed="false">Importância relativa</button>
+  </div>
+  <div class="panel" data-qpanel="livres" aria-live="polite"></div>
+
+  <h2 id="livres-participantes">Adicionar participantes</h2>
+  <p>Pelo botão <strong>Adicionar participantes</strong>, escolha uma das formas:</p>
+  <div class="chooser" data-switch="livres-part" role="group" aria-label="Forma de adicionar">
+    <button type="button" data-opt="manual" aria-pressed="true">Manualmente</button>
+    <button type="button" data-opt="massa" aria-pressed="false">Em massa</button>
+  </div>
+  <div data-switch-panel="livres-part" data-opt="manual">
+    <ol class="steps">
+      <li><button type="button" data-step="livres-m1"><span class="t"><b>Selecione os participantes</b>Busque por nome, número de documento ou outros dados.</span></button></li>
+      <li><button type="button" data-step="livres-m2"><span class="t"><b>Clique em Adicionar seleção</b></span></button></li>
+      <li><button type="button" data-step="livres-m3"><span class="t"><b>Confira a aba Participantes selecionados</b>Remova quem não deve participar.</span></button></li>
+      <li><button type="button" data-step="livres-m4"><span class="t"><b>Clique em Salvar e Seguir</b></span></button></li>
+    </ol>
+  </div>
+  <div data-switch-panel="livres-part" data-opt="massa" hidden>
+    <ol class="steps">
+      <li><button type="button" data-step="livres-x1"><span class="t"><b>Baixe o template</b></span></button></li>
+      <li><button type="button" data-step="livres-x2"><span class="t"><b>Preencha a planilha</b>Número de documento (obrigatório), no formato correto e sem espaços. Código da ficha pode ficar em branco se o colaborador tiver só uma ficha.</span></button></li>
+      <li><button type="button" data-step="livres-x3"><span class="t"><b>Salve o arquivo</b></span></button></li>
+      <li><button type="button" data-step="livres-x4"><span class="t"><b>Clique em Selecionar arquivo</b>Pronto, os participantes são carregados.</span></button></li>
+    </ol>
+  </div>
+
+  <h2 id="livres-notif">Iniciar e acompanhar</h2>
+  <ul class="plain">
+    <li>Ao iniciar a pesquisa, a mensagem configurada é enviada a todos os participantes.</li>
+    <li>Com a pesquisa em andamento, ainda dá para adicionar participantes (manual ou em massa) e excluir quem não deve participar.</li>
+    <li><strong>Enviar lembretes</strong> reenvia a mesma mensagem, em massa.</li>
+  </ul>
+
+  <h2 id="livres-relatorios">Relatórios</h2>
+  <ul class="feats">
+    <li><b>Avanço em tempo real</b><span>Percentual de respostas e status de cada participante.</span></li>
+    <li><b>Baixar respostas</b><span>Excel com todas as respostas, para montar seus próprios gráficos.</span></li>
+    <li><b>Por participante</b><span>Veja as respostas de cada pessoa e baixe os dados.</span></li>
+    <li><b>Por pergunta</b><span>Compare as respostas de todos para a mesma pergunta.</span></li>
+  </ul>
+  <div class="note info"><p>Em pesquisas anônimas, as respostas não aparecem associadas ao nome do participante.</p></div>
+  <nav class="pager"><a href="#inicio"><small>Anterior</small>Início</a><a class="next" href="#clima"><small>Próximo</small>Pesquisas de Clima</a></nav>
+</section>
+
+<!-- PESQUISAS DE CLIMA -->
+<section class="page" data-page="clima" aria-labelledby="h-clima">
+  <h1 id="h-clima">Pesquisas de Clima</h1>
+  <p class="lead">Meça o clima organizacional com confidencialidade garantida: nenhum resultado aparece para grupos com menos de 4 respostas.</p>
+  <div class="meta"><div class="progress"><span class="track"><i></i></span><span class="pct">0 de 0 passos</span></div><button class="reset" type="button">Recomeçar</button></div>
+  <ul class="toc">
+    <li><a href="#clima" data-jump="clima-recursos">Recursos</a></li>
+    <li><a href="#clima" data-jump="clima-perguntas">Perguntas</a></li>
+    <li><a href="#clima" data-jump="clima-geral">Configuração geral</a></li>
+    <li><a href="#clima" data-jump="clima-participantes">Participantes</a></li>
+    <li><a href="#clima" data-jump="clima-confid">Confidencialidade</a></li>
+    <li><a href="#clima" data-jump="clima-resultados">Resultados</a></li>
+  </ul>
+
+  <h2 id="clima-recursos">Recursos do módulo</h2>
+  <ul class="feats">
+    <li><b>Metodologia configurável</b><span>Média Simples, Porcentagem de Promotores ou Net Happiness Score.</span></li>
+    <li><b>Relatórios</b><span>Andamento online e download dos resultados.</span></li>
+    <li><b>Mapa de calor</b><span>Veja em um relance quais categorias e áreas vão bem ou mal.</span></li>
+    <li><b>Análise de sentimentos</b><span>Classifica comentários em positivos, neutros e negativos.</span></li>
+  </ul>
+
+  <h2 id="clima-perguntas">Montar as perguntas</h2>
+  <ol class="path"><li>Menu lateral</li><li>Cultura</li><li>Pesquisas</li><li>Clima</li></ol>
+  <ol class="steps">
+    <li><button type="button" data-step="clima-p1"><span class="t"><b>Clique em Nova Pesquisa de Clima</b>Use o modelo da Buk (Clima laboral) com perguntas-guia ou comece em branco.</span></button></li>
+    <li><button type="button" data-step="clima-p2"><span class="t"><b>Dê um nome à pesquisa</b></span></button></li>
+    <li><button type="button" data-step="clima-p3"><span class="t"><b>Configure as categorias</b>Crie, edite ou exclua categorias e defina quais entram no cálculo do resultado.</span></button></li>
+    <li><button type="button" data-step="clima-p4"><span class="t"><b>Revise as perguntas</b>A lista mostra cada pergunta com sua categoria; edite ou exclua o que precisar.</span></button></li>
+    <li><button type="button" data-step="clima-p5"><span class="t"><b>Decida se aceita comentários</b>Marque Permitir adicionar comentários para receber texto livre em cada pergunta.</span></button></li>
+    <li><button type="button" data-step="clima-p6"><span class="t"><b>Pré-visualize e clique em Salvar e Seguir</b></span></button></li>
+  </ol>
+  <h3>Tipos de pergunta</h3>
+  <div class="chooser" data-qset="clima" role="group" aria-label="Tipos de pergunta">
+    <button type="button" data-q="paragrafo" aria-pressed="true">Parágrafo</button>
+    <button type="button" data-q="unica" aria-pressed="false">Seleção única</button>
+    <button type="button" data-q="importancia" aria-pressed="false">Importância relativa</button>
+    <button type="button" data-q="nps" aria-pressed="false">NPS</button>
+  </div>
+  <div class="panel" data-qpanel="clima" aria-live="polite"></div>
+
+  <h2 id="clima-geral">Configuração geral</h2>
+  <ol class="steps">
+    <li><button type="button" data-step="clima-g1"><span class="t"><b>Informe as datas</b>São informativas: a pesquisa não abre nem fecha sozinha.</span></button></li>
+    <li><button type="button" data-step="clima-g2"><span class="t"><b>Escreva as mensagens</b>Notificação de início e fim, boas-vindas e encerramento. Use variáveis como o nome do colaborador.</span></button></li>
+    <li><button type="button" data-step="clima-g3"><span class="t"><b>Escolha a metodologia de cálculo</b>Teste as três na calculadora abaixo antes de decidir.</span></button></li>
+    <li><button type="button" data-step="clima-g4"><span class="t"><b>Clique em Salvar e Seguir</b></span></button></li>
+  </ol>
+  <div class="calc" data-calc="metodo">
+    <h4>Compare as metodologias</h4>
+    <p class="sub">Digite quantas respostas cada nota recebeu (escala de 1 a 5).</p>
+    <div class="inputs">
+      <label>Nota 1<input type="number" min="0" inputmode="numeric" value="4" data-n="1"></label>
+      <label>Nota 2<input type="number" min="0" inputmode="numeric" value="6" data-n="2"></label>
+      <label>Nota 3<input type="number" min="0" inputmode="numeric" value="10" data-n="3"></label>
+      <label>Nota 4<input type="number" min="0" inputmode="numeric" value="18" data-n="4"></label>
+      <label>Nota 5<input type="number" min="0" inputmode="numeric" value="12" data-n="5"></label>
+    </div>
+    <div class="out">
+      <div><span>Média Simples</span><b data-o="media">–</b><span>de 1 a 5</span></div>
+      <div><span>Porcentagem de Promotores</span><b data-o="prom">–</b><span>notas 4 e 5</span></div>
+      <div><span>Net Happiness Score</span><b data-o="nhs">–</b><span>% de 4 e 5 menos % de 1 e 2</span><em data-o="nhsLabel"></em></div>
+    </div>
+    <div class="stack" data-o="stack"></div>
+    <div class="legend"><span style="--c:var(--bad)">Negativas (1–2)</span><span style="--c:var(--mid)">Neutras (3)</span><span style="--c:var(--ok)">Positivas (4–5)</span></div>
+  </div>
+
+  <h2 id="clima-participantes">Adicionar participantes</h2>
+  <div class="chooser" data-switch="clima-part" role="group" aria-label="Forma de adicionar">
+    <button type="button" data-opt="manual" aria-pressed="true">Manualmente</button>
+    <button type="button" data-opt="massa" aria-pressed="false">Em massa</button>
+  </div>
+  <div data-switch-panel="clima-part" data-opt="manual">
+    <ol class="steps">
+      <li><button type="button" data-step="clima-m1"><span class="t"><b>Selecione os participantes</b>Busque por nome, número de documento ou outros dados.</span></button></li>
+      <li><button type="button" data-step="clima-m2"><span class="t"><b>Clique em Adicionar seleção</b></span></button></li>
+      <li><button type="button" data-step="clima-m3"><span class="t"><b>Confira Participantes selecionados</b></span></button></li>
+      <li><button type="button" data-step="clima-m4"><span class="t"><b>Clique em Salvar e Seguir</b></span></button></li>
+    </ol>
+  </div>
+  <div data-switch-panel="clima-part" data-opt="massa" hidden>
+    <p>O importador cria uma estrutura de relatórios só para esta pesquisa, sem mexer no organograma da Buk.</p>
+    <ol class="steps">
+      <li><button type="button" data-step="clima-x1"><span class="t"><b>Escolha a profundidade dos Grupos de Clima</b>De 3 a 16 níveis. Define quantas colunas o template terá.</span></button></li>
+      <li><button type="button" data-step="clima-x2"><span class="t"><b>Baixe e preencha o template</b>Número de documento (obrigatório), código da ficha, divisão, área e subárea.</span></button></li>
+      <li><button type="button" data-step="clima-x3"><span class="t"><b>Revise os nomes dos grupos</b>Qualquer diferença de escrita cria dois grupos e dois relatórios separados.</span></button></li>
+      <li><button type="button" data-step="clima-x4"><span class="t"><b>Clique em Selecionar arquivo</b>Use Sobrescrever carga de participantes para substituir uma carga anterior.</span></button></li>
+    </ol>
+    <div class="note"><p><strong>Importante:</strong> cada participante precisa estar em todos os níveis da divisão à qual pertence.</p></div>
+  </div>
+
+  <h2 id="clima-confid">Validar a confidencialidade</h2>
+  <p>Na etapa de validação, toda área com menos de 4 pessoas aparece como <strong>Não cumpre</strong>. Simule sua estrutura abaixo.</p>
+  <div class="calc" data-calc="areas">
+    <h4>Verificador de áreas</h4>
+    <p class="sub">Informe o nome e o número de participantes de cada área.</p>
+    <ul class="areas"></ul>
+    <p><button type="button" class="btn ghost" data-add-area>Adicionar área</button></p>
+    <p data-o="areasMsg" aria-live="polite"></p>
+  </div>
+  <h3>O que fazer com as áreas que não cumprem</h3>
+  <ul class="feats">
+    <li><b>Transferir participantes</b><span>Mova pessoas para outra área. Exemplo: levar o Jorge da Contabilidade para a equipe Financeira.</span></li>
+    <li><b>Criar um novo grupo</b><span>Una duas ou mais áreas. Exemplo: Marketing, RH e Folha no grupo Administrativos.</span></li>
+  </ul>
+  <p>Selecione os participantes e use o botão <strong>Ações</strong>. A transferência pode ser desfeita.</p>
+  <div class="note info"><p>Isso não altera o organograma da Buk. Vale só para a confidencialidade desta pesquisa.</p></div>
+
+  <h2 id="clima-resultados">Iniciar e ler os resultados</h2>
+  <ul class="plain">
+    <li>Ao iniciar, a mensagem configurada vai para todos os participantes. Depois disso ainda dá para adicionar pessoas e criar grupos.</li>
+    <li><strong>Enviar lembretes</strong> reenvia a mensagem para quem não respondeu.</li>
+  </ul>
+  <ul class="feats">
+    <li><b>Resumo</b><span>Gráficos exportáveis e o top 10 dos itens mais bem e mais mal avaliados. Em Ações, baixe os dados em Excel.</span></li>
+    <li><b>Perguntas</b><span>Nota média de cada pergunta.</span></li>
+    <li><b>Avançado</b><span>Mapa de calor por categoria e área.</span></li>
+    <li><b>Comentários</b><span>Análise de sentimentos; você pode corrigir a classificação manualmente.</span></li>
+  </ul>
+  <nav class="pager"><a href="#livres"><small>Anterior</small>Pesquisas Livres</a><a class="next" href="#admin"><small>Próximo</small>Manual do administrador</a></nav>
+</section>
+<!-- MANUAL DO ADMINISTRADOR -->
+<section class="page" data-page="admin" aria-labelledby="h-admin">
+  <h1 id="h-admin">Manual do administrador de Clima</h1>
+  <p class="lead">Tudo o que o administrador precisa para configurar a Pesquisa de Clima by Buk, acompanhar o processo e transformar os resultados em planos de ação.</p>
+  <div class="meta"><div class="progress"><span class="track"><i></i></span><span class="pct">0 de 0 passos</span></div><button class="reset" type="button">Recomeçar</button></div>
+
+  <div class="tabs" role="tablist" aria-label="Seções do manual">
+    <button role="tab" type="button" aria-selected="true" data-tab="a-visao">Visão geral</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-config">Configuração</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-metodo">Metodologias</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-part">Participantes e validação</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-perm">Permissões</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-result">Resultados</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-leitura">Leitura e planos</button>
+    <button role="tab" type="button" aria-selected="false" data-tab="a-faq">Perguntas frequentes</button>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-visao">
+    <h2>O que é clima organizacional</h2>
+    <p>É a percepção compartilhada pelos colaboradores sobre o ambiente em que trabalham: cultura, ambiente de trabalho, colaboração e liderança. Essa percepção influencia diretamente comportamento, engajamento, produtividade e satisfação.</p>
+    <h3>Com a Pesquisa de Clima você pode</h3>
+    <ul class="plain">
+      <li>Criar sua própria pesquisa para conhecer e melhorar o ambiente da empresa.</li>
+      <li>Reagrupar áreas para respeitar o critério de visualização.</li>
+      <li>Tabular os resultados automaticamente, com relatórios por área, divisão, sexo, idade e outras dimensões.</li>
+      <li>Ver quais áreas são mais fortes e quais precisam de um plano de ação.</li>
+      <li>Escolher entre Porcentagem de Promotores, Média Simples e Net Happiness Score.</li>
+    </ul>
+    <h2>O instrumento by Buk</h2>
+    <p>A abordagem é de síntese: o clima resulta da interação entre as percepções individuais e os fatores estruturais da organização (políticas, cultura e processos formais).</p>
+    <p>São <strong>28 afirmações</strong> com validade de conteúdo, validade lógica por revisão de especialistas e validade de construto (alfa de Cronbach e análise fatorial exploratória e confirmatória). Toque em uma categoria:</p>
+    <div class="chooser" data-switch="a-cat" role="group" aria-label="Categorias">
+      <button type="button" data-opt="cultura" aria-pressed="true">Cultura organizacional</button>
+      <button type="button" data-opt="ambiente" aria-pressed="false">Ambiente de trabalho</button>
+      <button type="button" data-opt="lideranca" aria-pressed="false">Liderança</button>
+      <button type="button" data-opt="colab" aria-pressed="false">Trabalho colaborativo</button>
+    </div>
+    <div class="panel" data-switch-panel="a-cat" data-opt="cultura"><h4>Cultura organizacional</h4><p>Valores, crenças, práticas e comportamentos compartilhados. Aparece na comunicação interna, nas relações interpessoais, na percepção de equidade em remuneração e benefícios, no desenvolvimento profissional, na inovação e na promoção de diversidade, equidade e inclusão.</p></div>
+    <div class="panel" data-switch-panel="a-cat" data-opt="ambiente" hidden><h4>Ambiente de trabalho</h4><p>Ambiente físico, segurança no trabalho, carga de trabalho, recursos e ferramentas disponíveis e modalidades de trabalho.</p></div>
+    <div class="panel" data-switch-panel="a-cat" data-opt="lideranca" hidden><h4>Liderança</h4><p>Efetividade da liderança e seu impacto no clima e no bem-estar dos colaboradores.</p></div>
+    <div class="panel" data-switch-panel="a-cat" data-opt="colab" hidden><h4>Trabalho colaborativo</h4><p>Como o trabalho em equipe e a colaboração são promovidos e praticados para alcançar objetivos comuns.</p></div>
+    <div class="note"><p><strong>Importante:</strong> o instrumento já foi validado. Alterar afirmações, categorias ou escala pode comprometer a precisão e a consistência dos resultados.</p></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-config" hidden>
+    <h2>Configurar a pesquisa</h2>
+    <ol class="steps">
+      <li><button type="button" data-step="admin-c1"><span class="t"><b>Clique em Nova Pesquisa de Clima</b>Escolha entre modelo em branco, modelo Buk (Clima laboral ou Clima Organizacional by Buk) ou a configuração de uma pesquisa anterior.</span></button></li>
+      <li><button type="button" data-step="admin-c2"><span class="t"><b>Revise o formulário</b>O modelo Buk gera 28 perguntas. Crie, edite ou exclua perguntas, uma a uma ou em massa.</span></button></li>
+      <li><button type="button" data-step="admin-c3"><span class="t"><b>Organize as categorias primeiro</b>Se for montar sua própria pesquisa, crie as categorias antes das perguntas. Você pode tirar uma categoria do cálculo global.</span></button></li>
+      <li><button type="button" data-step="admin-c4"><span class="t"><b>Adicione perguntas próprias</b>Uma a uma ou pelo importador em massa: parágrafo, seleção única, importância relativa ou NPS.</span></button></li>
+      <li><button type="button" data-step="admin-c5"><span class="t"><b>Permita comentários, se quiser</b>Comentários e respostas de parágrafo podem passar por Analisar Sentimentos no final.</span></button></li>
+      <li><button type="button" data-step="admin-c6"><span class="t"><b>Registre as datas</b>São só de registro: não abrem nem fecham a pesquisa automaticamente.</span></button></li>
+      <li><button type="button" data-step="admin-c7"><span class="t"><b>Configure notificações e mensagens</b>Início, boas-vindas, encerramento e fim. Use variáveis para personalizar.</span></button></li>
+      <li><button type="button" data-step="admin-c8"><span class="t"><b>Escolha a metodologia de cálculo</b>Depois de iniciar a pesquisa, não é mais possível mudar.</span></button></li>
+    </ol>
+    <h2>Como configurar cada tipo de pergunta</h2>
+    <div class="tw"><table>
+      <thead><tr><th>Tipo</th><th>Como configurar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Parágrafo</strong></td><td>Resposta em texto longo. Título (obrigatório) e descrição (opcional).</td></tr>
+        <tr><td><strong>Seleção única</strong></td><td>Escolha a categoria, título e descrição. Informe uma opção por linha, da menor para a maior satisfação.</td></tr>
+        <tr><td><strong>Importância relativa</strong></td><td>O colaborador ordena as opções pela própria preferência.</td></tr>
+        <tr><td><strong>NPS</strong></td><td>Apenas uma por pesquisa. Escala fixa de 0 a 10; você só define os rótulos das pontas.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Em todos os tipos, a caixa no canto superior direito torna a resposta obrigatória. Títulos e parágrafos soltos ajudam a dar contexto ao participante.</p>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-metodo" hidden>
+    <h2>Metodologias de cálculo</h2>
+    <div class="chooser" data-switch="a-met" role="group" aria-label="Metodologia">
+      <button type="button" data-opt="media" aria-pressed="true">Média Simples</button>
+      <button type="button" data-opt="prom" aria-pressed="false">Porcentagem de Promotores</button>
+      <button type="button" data-opt="nhs" aria-pressed="false">Net Happiness Score</button>
+    </div>
+    <div class="panel" data-switch-panel="a-met" data-opt="media">
+      <h4>Média Simples</h4>
+      <p>O valor central das notas: soma de todas as notas dividida pela quantidade de respostas.</p>
+      <p><strong>Média = soma de todos os valores ÷ número total de valores</strong></p>
+    </div>
+    <div class="panel" data-switch-panel="a-met" data-opt="prom" hidden>
+      <h4>Porcentagem de Promotores (Fred Reichheld)</h4>
+      <p>Mede satisfação e lealdade: promotores são colaboradores muito satisfeitos e dispostos a recomendar a empresa.</p>
+      <p>Bases teóricas: satisfação no trabalho (Frederick Herzberg), comportamento do consumidor (Philip Kotler) e indicadores-chave de desempenho (Bernard Marr).</p>
+      <p>Usa a escala NPS: “De 0 a 10, qual a probabilidade de você recomendar nossa organização como um bom lugar para trabalhar?”</p>
+      <p><strong>NPS = (promotores − detratores) ÷ total de respostas × 100</strong>, de −100 a +100.</p>
+    </div>
+    <div class="panel" data-switch-panel="a-met" data-opt="nhs" hidden>
+      <h4>Net Happiness Score (Fred Reichheld)</h4>
+      <p>Mede satisfação e felicidade, tratando a felicidade como indicador-chave de bem-estar e desempenho.</p>
+      <p>Bases teóricas: satisfação no trabalho (Herzberg), comprometimento organizacional (John P. Meyer e Natalie J. Allen), bem-estar subjetivo (Ed Diener) e indicadores-chave de desempenho (Bernard Marr).</p>
+      <p>Escalas sugeridas: Likert de 5 ou 7 pontos (discordo totalmente a concordo totalmente) ou numérica de 1 a 10. Use sempre a mesma escala para comparar resultados ao longo do tempo.</p>
+      <p><strong>NHS = % de respostas 4 e 5 − % de respostas 1 e 2</strong>. As neutras (3) não entram.</p>
+    </div>
+    <div class="calc" data-calc="nps">
+      <h4>Calculadora de NPS</h4>
+      <p class="sub">Quantas pessoas deram cada faixa de nota na pergunta de 0 a 10?</p>
+      <div class="inputs">
+        <label>Detratores (0–6)<input type="number" min="0" inputmode="numeric" value="8" data-n="d"></label>
+        <label>Neutros (7–8)<input type="number" min="0" inputmode="numeric" value="12" data-n="n"></label>
+        <label>Promotores (9–10)<input type="number" min="0" inputmode="numeric" value="20" data-n="p"></label>
+      </div>
+      <div class="out">
+        <div><span>NPS</span><b data-o="nps">–</b><span>de −100 a +100</span><em data-o="npsLabel"></em></div>
+        <div><span>Respostas</span><b data-o="total">–</b><span>total</span></div>
+      </div>
+      <div class="stack" data-o="stack"></div>
+      <div class="legend"><span style="--c:var(--bad)">Detratores</span><span style="--c:var(--mid)">Neutros</span><span style="--c:var(--ok)">Promotores</span></div>
+    </div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-part" hidden>
+    <h2>Participantes</h2>
+    <ul class="feats">
+      <li><b>Manualmente</b><span>Escolha numa lista de colaboradores ativos.</span></li>
+      <li><b>Em massa</b><span>Template com número de documento, código da ficha, divisão, área e subárea. Cria uma estrutura só da pesquisa, sem alterar o organograma.</span></li>
+    </ul>
+    <div class="note info"><p><strong>Critério de visualização:</strong> nenhum resultado é exibido para grupos com menos de 4 respostas. O mínimo pode ser aumentado nos parâmetros gerais.</p></div>
+    <h2>Validar e iniciar</h2>
+    <ol class="steps">
+      <li><button type="button" data-step="admin-v1"><span class="t"><b>Confira quais subáreas cumprem o critério</b>O sistema marca cada uma como cumpre ou não cumpre.</span></button></li>
+      <li><button type="button" data-step="admin-v2"><span class="t"><b>Ajuste as que não cumprem</b>Transfira participantes (um a um ou vários pelo menu Ações) ou crie um novo grupo.</span></button></li>
+      <li><button type="button" data-step="admin-v3"><span class="t"><b>Revise o formulário</b>Ainda dá tempo de corrigir erros antes de iniciar.</span></button></li>
+      <li><button type="button" data-step="admin-v4"><span class="t"><b>Compartilhe a administração, se precisar</b>Acesso de leitura ou de modificação para outros usuários da Buk.</span></button></li>
+      <li><button type="button" data-step="admin-v5"><span class="t"><b>Clique em Começar a pesquisa</b>Os participantes recebem as notificações por e-mail. Subáreas em cinza (“não afeta”) são eliminadas.</span></button></li>
+    </ol>
+    <h2>Durante a pesquisa</h2>
+    <ul class="plain">
+      <li>Acompanhe o avanço global das respostas.</li>
+      <li>Valide os critérios de visualização: transfira participantes ou crie grupos.</li>
+      <li>Envie lembretes: o sistema envia só para quem não respondeu.</li>
+      <li>Apague respostas, reenvie o formulário ou inative participantes.</li>
+    </ul>
+    <div class="note"><p><strong>Finalizar é irreversível.</strong> Depois de finalizada, a pesquisa não pode ser reaberta.</p></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-perm" hidden>
+    <h2>Permissões de administração</h2>
+    <p>Só o administrador do módulo concede permissões, por usuário (escolhendo leitura ou modificação e, se quiser, limitando áreas) ou em massa, pelo template.</p>
+    <h3>O que cada perfil vê</h3>
+    <div class="chooser" data-perm="perfil" role="group" aria-label="Perfil">
+      <button type="button" data-opt="leitura" aria-pressed="true">Leitura</button>
+      <button type="button" data-opt="mod" aria-pressed="false">Modificação</button>
+    </div>
+    <div class="chooser" data-perm="limite" role="group" aria-label="Limite de áreas">
+      <button type="button" data-opt="sem" aria-pressed="true">Todas as áreas</button>
+      <button type="button" data-opt="com" aria-pressed="false">Áreas limitadas</button>
+    </div>
+    <div class="chooser" data-perm="fase" role="group" aria-label="Fase da pesquisa">
+      <button type="button" data-opt="andamento" aria-pressed="true">Pesquisa em andamento</button>
+      <button type="button" data-opt="final" aria-pressed="false">Pesquisa finalizada</button>
+    </div>
+    <div class="panel" data-o="perm" aria-live="polite"></div>
+    <h3>Administrador do módulo</h3>
+    <p>Atribuído em Usuários e Perfis pelo administrador Buk da empresa.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Área</th><th>O que pode fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pesquisa</strong></td><td>Criar e configurar pesquisas e notificações, escolher a metodologia, atribuir participantes pela estrutura Buk ou personalizada (até 16 níveis) e ver o painel de todas as pesquisas.</td></tr>
+        <tr><td><strong>Processo</strong></td><td>Compartilhar a administração, resetar formulário, inativar, adicionar e transferir participantes, enviar lembretes.</td></tr>
+        <tr><td><strong>Resultados</strong></td><td>Resumo, perguntas, avançado, detalhe de áreas, administração, download e comparação de resultados.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-result" hidden>
+    <h2>Painel de resultados</h2>
+    <ul class="feats">
+      <li><b>Resumo</b><span>Participação, datas, resultado por categoria, divisão, grupo e subárea, e por sexo, idade e tempo de casa.</span></li>
+      <li><b>Top 10</b><span>Itens mais bem e mais mal avaliados.</span></li>
+      <li><b>Perguntas</b><span>Nota ou percentual por pergunta, com filtro por divisão, área e subárea.</span></li>
+      <li><b>Comentários</b><span>Comentários e respostas abertas com análise de sentimentos.</span></li>
+      <li><b>NPS</b><span>Resultado da pergunta NPS, se houver.</span></li>
+      <li><b>Avançado</b><span>Mapa de calor de categorias por área, com escalas e cores configuráveis.</span></li>
+      <li><b>Detalhe de áreas</b><span>Resultados em formato de organograma.</span></li>
+    </ul>
+    <div class="note info"><p>Gráficos de um segmento só aparecem com mais de 4 respostas nele. As respostas de grupos pequenos continuam somadas à área ou divisão.</p></div>
+    <h2>Abas do Excel para download</h2>
+    <p>Em <strong>Ações</strong>, baixe todos os dados. Digite para filtrar as abas:</p>
+    <p><input type="search" data-filter="abas" placeholder="Ex.: frequência, área, NPS" style="font:inherit;width:100%;max-width:420px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)"></p>
+    <div class="tw"><table data-filtered="abas">
+      <thead><tr><th>Aba</th><th>Conteúdo</th></tr></thead>
+      <tbody>
+        <tr><td>Resumo</td><td>Pesquisas enviadas e respondidas, participantes por sexo e faixa etária, resultado por divisão, área e subárea.</td></tr>
+        <tr><td>Categorias por divisão</td><td>Resultado de cada divisão por categoria.</td></tr>
+        <tr><td>Perguntas por divisão</td><td>Perguntas de cada categoria, totalizadas e segmentadas por divisão.</td></tr>
+        <tr><td>Categorias por área</td><td>Resultado por categoria e área.</td></tr>
+        <tr><td>Perguntas por área</td><td>Média das perguntas por área.</td></tr>
+        <tr><td>Categorias por subárea</td><td>Resultado por categoria e subárea.</td></tr>
+        <tr><td>Perguntas por subárea</td><td>Média das perguntas por subárea.</td></tr>
+        <tr><td>Frequências</td><td>Quantas vezes cada opção da escala foi escolhida.</td></tr>
+        <tr><td>Frequências por divisão, área e subárea</td><td>A mesma contagem, segmentada.</td></tr>
+        <tr><td>Perguntas de parágrafo</td><td>Respostas abertas com a análise de sentimentos.</td></tr>
+        <tr><td>Comentários</td><td>Comentários das perguntas com a análise de sentimentos.</td></tr>
+        <tr><td>NPS</td><td>Detratores, neutros e promotores da pergunta NPS.</td></tr>
+        <tr><td>Categorias por família de cargo</td><td>Média de cada categoria por família de cargos.</td></tr>
+        <tr><td>Perguntas por família de cargo</td><td>Média das perguntas por família de cargos (configurada em Cargos).</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-leitura" hidden>
+    <h2>Interpretar o mapa de calor</h2>
+    <p>Arraste para ver o que cada faixa de nota significa e qual plano de ação priorizar.</p>
+    <div class="calc" data-calc="heat">
+      <div class="heat" aria-hidden="true"><i style="background:#D84B4F"></i><i style="background:#EE8A4A"></i><i style="background:#F2C14E"></i><i style="background:#C9D65A"></i><i style="background:#7CC27A"></i><i style="background:#3FA56B"></i></div>
+      <label for="heatR" style="font-weight:700">Nota: <span data-o="heatVal">3.0</span></label>
+      <input id="heatR" type="range" min="0" max="5" step="0.1" value="3">
+      <div data-o="heatOut" aria-live="polite" style="margin-top:12px"></div>
+    </div>
+    <h2>Três níveis de leitura</h2>
+    <ul class="feats">
+      <li><b>Geral</b><span>Visão da empresa toda. Analise por categoria e encontre temas que afetam todos.</span></li>
+      <li><b>Por área</b><span>Diferenças entre áreas e subáreas, para personalizar estratégias e priorizar.</span></li>
+      <li><b>Por liderança</b><span>Impacto da gestão de cada líder e oportunidades na relação líder e equipe.</span></li>
+    </ul>
+    <h2>O que fazer com os resultados</h2>
+    <ol class="steps">
+      <li><button type="button" data-step="admin-r1"><span class="t"><b>Analise e defina os planos de ação</b></span></button></li>
+      <li><button type="button" data-step="admin-r2"><span class="t"><b>Cuide também dos pontos altos</b>Mantê-los é tão importante quanto corrigir os baixos.</span></button></li>
+      <li><button type="button" data-step="admin-r3"><span class="t"><b>Comunique os resultados</b>Monte um plano para levar os resultados às equipes.</span></button></li>
+    </ol>
+    <h3>Ideias de ação por categoria</h3>
+    <div class="chooser" data-switch="a-plan" role="group" aria-label="Categoria">
+      <button type="button" data-opt="colab" aria-pressed="true">Trabalho colaborativo</button>
+      <button type="button" data-opt="lid" aria-pressed="false">Liderança</button>
+      <button type="button" data-opt="cult" aria-pressed="false">Cultura organizacional</button>
+    </div>
+    <div class="panel" data-switch-panel="a-plan" data-opt="colab"><ul class="plain">
+      <li><strong>Comunicação aberta:</strong> reuniões regulares e espaço para ideias e preocupações sem medo de represálias.</li>
+      <li><strong>Metas claras e compartilhadas:</strong> metas SMART, divididas em tarefas menores.</li>
+      <li><strong>Troca de ideias:</strong> brainstormings e resolução de problemas em grupo.</li>
+      <li><strong>Papéis definidos:</strong> responsabilidades claras evitam confusão e conflito.</li>
+      <li><strong>Confiança e respeito:</strong> valorizar opiniões e reconhecer contribuições.</li>
+      <li><strong>Conflitos construtivos:</strong> diálogo aberto em busca de soluções para todos.</li>
+      <li><strong>Celebrar conquistas:</strong> prêmios, menções e marcos de projeto.</li>
+    </ul></div>
+    <div class="panel" data-switch-panel="a-plan" data-opt="lid" hidden><ul class="plain">
+      <li><strong>Autoconhecimento:</strong> conhecer forças e pontos a desenvolver.</li>
+      <li><strong>Comunicação:</strong> escuta ativa, clareza e abertura.</li>
+      <li><strong>Trabalho em equipe:</strong> delegar, apoiar e reconhecer.</li>
+      <li><strong>Tomada de decisão:</strong> avaliar opções e decidir de forma informada.</li>
+      <li><strong>Adaptação:</strong> liderar bem em períodos de mudança e incerteza.</li>
+      <li><strong>Desenvolvimento contínuo:</strong> programas, leituras e mentorias.</li>
+      <li><strong>Empatia e inteligência emocional:</strong> lidar bem com as próprias emoções e as da equipe.</li>
+    </ul></div>
+    <div class="panel" data-switch-panel="a-plan" data-opt="cult" hidden><ul class="plain">
+      <li><strong>Comunicação efetiva:</strong> metas, papéis e feedback constante em toda a empresa.</li>
+      <li><strong>Crescimento profissional:</strong> treinamentos, mentorias, projetos desafiadores e promoções.</li>
+      <li><strong>Reconhecimento:</strong> programas de reconhecimento, incentivos e gratidão frequente.</li>
+      <li><strong>Equilíbrio entre trabalho e vida:</strong> flexibilidade, descanso e gestão do estresse.</li>
+      <li><strong>Participação:</strong> envolver as pessoas nas decisões e dar autonomia.</li>
+      <li><strong>Cultura positiva:</strong> ambiente inclusivo, colaborativo e respeitoso.</li>
+    </ul></div>
+    <p>Melhorar o engajamento é um processo contínuo. Adapte essas ideias à realidade da sua empresa.</p>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" data-tabpanel="a-faq" hidden>
+    <h2>Perguntas frequentes</h2>
+    <details><summary>Posso mudar a metodologia de cálculo?</summary><p>Só durante a configuração. Depois de iniciar a pesquisa, não.</p></details>
+    <details><summary>Consigo baixar uma base com todas as respostas?</summary><p>Depois de finalizar, sim. O arquivo não traz cada resposta individual, mas mostra médias e percentuais por divisão, área e subárea, conforme a metodologia.</p></details>
+    <details><summary>Posso carregar participantes em massa? Quando?</summary><p>Sim, na configuração e também com a pesquisa em andamento.</p></details>
+    <details><summary>Posso mover participantes depois de finalizar?</summary><p>Não. Só na configuração e durante a pesquisa.</p></details>
+    <details><summary>Posso ter mais de uma pergunta NPS?</summary><p>Não. O sistema permite apenas uma.</p></details>
+    <details><summary>Posso excluir participantes?</summary><p>Não, mas pode inativá-los.</p></details>
+    <details><summary>Como envio lembretes?</summary><p>Pelo botão no monitoramento. Não precisa selecionar ninguém: o sistema envia só para quem ainda não respondeu.</p></details>
+    <details><summary>Como funciona a análise de sentimentos?</summary><p>Uma inteligência artificial lê comentários e respostas abertas e classifica cada um como positivo, neutro ou negativo. Você pode corrigir manualmente.</p></details>
+    <details><summary>Posso divulgar a pesquisa por QR code, WhatsApp ou link?</summary><p>Não. O sistema gera uma pesquisa por participante e envia o link a cada um quando o processo começa.</p></details>
+    <details><summary>Por que um gráfico aparece vazio se tenho participantes naquela faixa?</summary><p>Os gráficos só mostram dados com mais de 4 respostas por faixa, para preservar a confidencialidade.</p></details>
+    <details><summary>Posso personalizar os gráficos?</summary><p>Não, eles são predefinidos. Baixe os dados e monte seus próprios gráficos.</p></details>
+    <details><summary>O que acontece com as respostas de grupos que não cumprem o critério?</summary><p>Elas são somadas à área ou divisão correspondente e sempre contam no resultado final.</p></details>
+  </div>
+  <nav class="pager"><a href="#clima"><small>Anterior</small>Pesquisas de Clima</a><a class="next" href="#workflow"><small>Próximo</small>Workflow</a></nav>
+</section>
+<!-- WORKFLOW -->
+<section class="page" data-page="workflow" aria-labelledby="h-workflow">
+  <h1 id="h-workflow">Workflow</h1>
+  <p class="lead">Um workflow é um fluxo de trabalho automatizado: várias pessoas e etapas de aprovação levam uma solicitação até um resultado final.</p>
+  <div class="meta"><div class="progress"><span class="track"><i></i></span><span class="pct">0 de 0 passos</span></div><button class="reset" type="button">Recomeçar</button></div>
+  <ul class="toc">
+    <li><a href="#workflow" data-jump="wf-tipos">Tipos</a></li>
+    <li><a href="#workflow" data-jump="wf-partes">Partes do fluxo</a></li>
+    <li><a href="#workflow" data-jump="wf-criar">Criar</a></li>
+    <li><a href="#workflow" data-jump="wf-form">Formulário</a></li>
+    <li><a href="#workflow" data-jump="wf-perm">Permissões</a></li>
+    <li><a href="#workflow" data-jump="wf-dep">Dependências</a></li>
+    <li><a href="#workflow" data-jump="wf-usar">Usar</a></li>
+  </ul>
+
+  <h2 id="wf-tipos">Tipos de workflow</h2>
+  <p>Escolha um tipo para ver o objetivo e o que acontece no final.</p>
+  <div class="chooser" data-wftype role="group" aria-label="Tipos de workflow">
+    <button type="button" data-opt="busca" aria-pressed="false">Busca</button>
+    <button type="button" data-opt="admissao" aria-pressed="true">Admissão</button>
+    <button type="button" data-opt="mov" aria-pressed="false">Movimentação</button>
+    <button type="button" data-opt="desl" aria-pressed="false">Desligamento</button>
+    <button type="button" data-opt="flex" aria-pressed="false">Flexível</button>
+    <button type="button" data-opt="pre" aria-pressed="false">Pré-admissão</button>
+  </div>
+  <div class="panel" data-o="wftype" aria-live="polite"></div>
+
+  <h2 id="wf-partes">Partes do fluxo</h2>
+  <p>Todo fluxo precisa de pelo menos etapas, notificações e um resultado final. Toque em cada parte.</p>
+  <div class="flow" data-flow role="group" aria-label="Partes do fluxo">
+    <button type="button" data-opt="sol" aria-pressed="true"><b>Solicitação</b><span>o pedido inicial</span></button>
+    <button type="button" data-opt="etapas" aria-pressed="false"><b>Etapas</b><span>passos e aprovações</span></button>
+    <button type="button" data-opt="notif" aria-pressed="false"><b>Notificações</b><span>e-mails automáticos</span></button>
+    <button type="button" data-opt="gat" aria-pressed="false"><b>Gatilho</b><span>dispara o resultado</span></button>
+  </div>
+  <div class="panel" data-o="flow" aria-live="polite"></div>
+
+  <h2 id="wf-criar">Criar o workflow</h2>
+  <ol class="path"><li>Menu lateral</li><li>Colaboradores</li><li>Solicitações</li></ol>
+  <ol class="steps">
+    <li><button type="button" data-step="wf-c1"><span class="t"><b>Clique em Configuração</b></span></button></li>
+    <li><button type="button" data-step="wf-c2"><span class="t"><b>Clique em Criar Modelo</b></span></button></li>
+    <li><button type="button" data-step="wf-c3"><span class="t"><b>Dê um título e escolha o tipo</b>Flexível, Admissão, Desligamento, Movimentação, Busca ou Pré-admissão.</span></button></li>
+  </ol>
+
+  <h2 id="wf-form">Montar o formulário de cada etapa</h2>
+  <ol class="steps">
+    <li><button type="button" data-step="wf-f1"><span class="t"><b>Adicione os campos</b>Use Selecionar Campos ou Adicionar Campos Obrigatórios, que traz de uma vez os campos básicos do tipo de fluxo.</span></button></li>
+    <li><button type="button" data-step="wf-f2"><span class="t"><b>Defina o estado de cada campo</b>Veja abaixo a diferença entre os três estados.</span></button></li>
+    <li><button type="button" data-step="wf-f3"><span class="t"><b>Inclua campos livres, se precisar</b>Texto, Numérico, Arquivo, Lista ou Data. Ficam só no fluxo e não vão para nenhum outro processo.</span></button></li>
+    <li><button type="button" data-step="wf-f4"><span class="t"><b>Clique em Salvar</b></span></button></li>
+  </ol>
+  <div class="chooser" data-fieldstate role="group" aria-label="Estado do campo">
+    <button type="button" data-opt="leitura" aria-pressed="false">Leitura</button>
+    <button type="button" data-opt="opc" aria-pressed="true">Editável opcional</button>
+    <button type="button" data-opt="obr" aria-pressed="false">Editável obrigatório</button>
+  </div>
+  <div class="panel" data-o="fieldstate" aria-live="polite"></div>
+  <div class="note"><p><strong>Campos obrigatórios por tipo:</strong> alguns campos precisam estar como editável obrigatório em pelo menos uma etapa (não necessariamente a primeira). Para alterar dados de trabalho, por exemplo: Data de Início, Área, Cargo e Colaborador. Para criar a ficha do colaborador: documento, nome, sobrenome, gênero, nascimento, empresa, área, cargo, supervisor, salário-base, tipo de contrato, endereço, entre outros.</p></div>
+  <div class="note info"><p>A ordem em que você cria os campos livres é a ordem em que eles aparecem no formulário.</p></div>
+
+  <h2 id="wf-perm">Quem aprova cada etapa</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Tipo de atribuição</th><th>Quem executa a etapa</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Área/Cargo</strong></td><td>As áreas e cargos que você escolher.</td></tr>
+      <tr><td><strong>Administrador de solicitações</strong></td><td>Perfis de administrador ou com permissão de modificação em solicitações.</td></tr>
+      <tr><td><strong>Usuário</strong></td><td>Quem concluiu a etapa anterior escolhe a pessoa.</td></tr>
+      <tr><td><strong>Supervisor</strong></td><td>O supervisor de quem concluiu a etapa anterior.</td></tr>
+    </tbody>
+  </table></div>
+  <p>A aba também permite liberar o download do relatório da solicitação e definir aprovador conforme a hierarquia do solicitante.</p>
+
+  <h2 id="wf-dep">Dependências e notificações</h2>
+  <p>A dependência diz qual etapa, em qual status, libera a próxima. Por padrão, cada etapa depende da anterior aprovada. A primeira etapa não tem dependência, porque começa com a solicitação.</p>
+  <div class="status" data-status role="group" aria-label="Status">
+    <button type="button" data-opt="aprovado" aria-pressed="true"><span class="dot" style="--c:var(--ok)"></span>Aprovado</button>
+    <button type="button" data-opt="erro" aria-pressed="false"><span class="dot" style="--c:var(--mid)"></span>Erro</button>
+    <button type="button" data-opt="devolvido" aria-pressed="false"><span class="dot" style="--c:var(--blue)"></span>Devolvido</button>
+    <button type="button" data-opt="rejeitado" aria-pressed="false"><span class="dot" style="--c:var(--bad)"></span>Rejeitado</button>
+    <button type="button" data-opt="aguardando" aria-pressed="false"><span class="dot" style="--c:var(--muted)"></span>Aguardando</button>
+  </div>
+  <div class="panel" data-o="status" aria-live="polite"></div>
+  <p><strong>Notificações</strong> são e-mails enviados quando uma dependência é cumprida, para o responsável pela etapa, o solicitante ou um e-mail específico. Use variáveis como o nome do colaborador e o link da solicitação.</p>
+  <p><strong>Gatilho:</strong> a Buk liga o gatilho à última etapa aprovada. Para mudar, exclua a dependência criada pela Buk e adicione a sua. Ao final, o solicitante recebe um aviso automático de solicitação aprovada.</p>
+  <div class="note"><p><strong>Antes de usar:</strong> nenhuma etapa pode ter o triângulo de alerta. Na lista de modelos, o Status de Validação deve estar como Ativo (os outros são Incompleto e Erro).</p></div>
+
+  <h2 id="wf-usar">Abrir e acompanhar uma solicitação</h2>
+  <ol class="path"><li>Solicitações</li><li>Criar Solicitação</li></ol>
+  <ol class="steps">
+    <li><button type="button" data-step="wf-u1"><span class="t"><b>Escolha o processo</b></span></button></li>
+    <li><button type="button" data-step="wf-u2"><span class="t"><b>Preencha o formulário da etapa inicial</b></span></button></li>
+    <li><button type="button" data-step="wf-u3"><span class="t"><b>Acompanhe o andamento</b>Depois da primeira aprovação, a solicitação fica Em andamento. Só as pessoas do fluxo e RH/administrador veem e intervêm. Cada etapa aceita comentários.</span></button></li>
+    <li><button type="button" data-step="wf-u4"><span class="t"><b>Baixe o registro</b>PDF com toda a rastreabilidade (datas, horários, responsáveis) ou o exportador de solicitações para um relatório geral.</span></button></li>
+  </ol>
+  <nav class="pager"><a href="#admin"><small>Anterior</small>Manual do administrador</a><a class="next" href="#recursos"><small>Próximo</small>O que dá para fazer</a></nav>
+</section>
+
+<!-- RECURSOS -->
+<section class="page" data-page="recursos" aria-labelledby="h-recursos">
+  <h1 id="h-recursos">O que dá para fazer com Workflow</h1>
+  <p class="lead">Além de aprovar pedidos, os fluxos atualizam fichas, abrem processos seletivos, geram itens de folha e documentos, e podem disparar outras ações sozinhos.</p>
+  <h2>Gestão de colaboradores</h2>
+  <ul class="feats">
+    <li><b>Admissão</b><span>Gera a ficha do colaborador.</span></li>
+    <li><b>Movimentação</b><span>Altera salário, cargo, área e outros dados; as mudanças entram na ficha ao final.</span></li>
+    <li><b>Desligamento</b><span>Encerra o vínculo e inativa a ficha.</span></li>
+  </ul>
+  <h2>Seleção de pessoal</h2>
+  <ul class="feats"><li><b>Busca</b><span>Abre um processo de recrutamento a partir da solicitação. Requer o módulo de Seleção.</span></li></ul>
+  <h2>Integrações</h2>
+  <ul class="feats">
+    <li><b>Folha de pagamento</b><span>Prestação de contas ou adiantamento salarial gera um item (pagamento, desconto ou informativo) na folha. Requer o módulo.</span></li>
+    <li><b>Gestão Documental</b><span>Gera um documento a partir de um modelo ao concluir a solicitação. Requer o módulo.</span></li>
+  </ul>
+  <h2>Automações</h2>
+  <p>Quando um fluxo de Admissão, Movimentação ou Desligamento é disparado, outra ação pode começar sozinha. Monte uma combinação:</p>
+  <div class="calc" data-calc="auto">
+    <h4>Quando acontecer…</h4>
+    <div class="chooser" data-auto="gat" role="group" aria-label="Fluxo">
+      <button type="button" data-opt="Admissão" aria-pressed="true">Admissão</button>
+      <button type="button" data-opt="Movimentação" aria-pressed="false">Movimentação</button>
+      <button type="button" data-opt="Desligamento" aria-pressed="false">Desligamento</button>
+    </div>
+    <h4 style="margin-top:14px">…fazer automaticamente</h4>
+    <div class="chooser" data-auto="acao" role="group" aria-label="Ação">
+      <button type="button" data-opt="doc" aria-pressed="true">Gerar documentos</button>
+      <button type="button" data-opt="pesq" aria-pressed="false">Adicionar a uma Pesquisa Livre</button>
+      <button type="button" data-opt="tarefa" aria-pressed="false">Gerar tarefa pendente</button>
+      <button type="button" data-opt="ativos" aria-pressed="false">Solicitar ativos</button>
+      <button type="button" data-opt="curso" aria-pressed="false">Inscrever em curso</button>
+    </div>
+    <div class="panel" data-o="auto" aria-live="polite" style="margin-bottom:0"></div>
+  </div>
+  <nav class="pager"><a href="#workflow"><small>Anterior</small>Workflow</a><a class="next" href="#atributos"><small>Próximo</small>Atributos personalizados</a></nav>
+</section>
+
+<!-- ATRIBUTOS -->
+<section class="page" data-page="atributos" aria-labelledby="h-atributos">
+  <h1 id="h-atributos">Atributos personalizados no Workflow</h1>
+  <p class="lead">Crie campos que a Buk não tem por padrão e use-os nos formulários dos fluxos.</p>
+  <div class="meta"><div class="progress"><span class="track"><i></i></span><span class="pct">0 de 0 passos</span></div><button class="reset" type="button">Recomeçar</button></div>
+  <ol class="path"><li>Menu superior</li><li>Administração</li><li>Atributos Personalizados</li><li>Novo atributo personalizado</li></ol>
+  <h2>1. Escolha a entidade certa</h2>
+  <p>A entidade depende do tipo de fluxo em que o campo será usado. Escolha o fluxo:</p>
+  <div class="chooser" data-entity role="group" aria-label="Tipo de fluxo">
+    <button type="button" data-opt="Seleção" data-flow="Busca" aria-pressed="false">Busca</button>
+    <button type="button" data-opt="Colaborador" data-flow="Admissão" aria-pressed="true">Admissão</button>
+    <button type="button" data-opt="Trabalho" data-flow="Movimentação" aria-pressed="false">Movimentação</button>
+    <button type="button" data-opt="Trabalho" data-flow="Desligamento" aria-pressed="false">Desligamento</button>
+    <button type="button" data-opt="Colaborador" data-flow="Pré-admissão" aria-pressed="false">Pré-admissão</button>
+  </div>
+  <div class="panel" data-o="entity" aria-live="polite"></div>
+  <ol class="steps">
+    <li><button type="button" data-step="at-1"><span class="t"><b>Selecione a entidade</b>Conforme a tabela acima.</span></button></li>
+    <li><button type="button" data-step="at-2"><span class="t"><b>Dê um nome e escolha o tipo de valor</b></span></button></li>
+    <li><button type="button" data-step="at-3"><span class="t"><b>Marque as opções extras, se fizer sentido</b><small>Atributo sensível para API: só aparece na API para tokens com permissão de leitura sensível.<br>Visível para o colaborador: a própria pessoa vê o campo.</small></span></button></li>
+    <li><button type="button" data-step="at-4"><span class="t"><b>Clique em Salvar</b></span></button></li>
+  </ol>
+  <h2>2. Adicione o campo ao formulário</h2>
+  <ol class="steps">
+    <li><button type="button" data-step="at-5"><span class="t"><b>Abra a etapa do workflow, aba Formulário</b></span></button></li>
+    <li><button type="button" data-step="at-6"><span class="t"><b>Em Selecionar Campos, escolha o atributo criado</b></span></button></li>
+  </ol>
+  <h2>3. Defina o estado do campo</h2>
+  <ol class="steps">
+    <li><button type="button" data-step="at-7"><span class="t"><b>Escolha Leitura, Editável opcional ou Editável obrigatório</b>Veja a diferença na página de <a href="#workflow">Workflow</a>.</span></button></li>
+    <li><button type="button" data-step="at-8"><span class="t"><b>Clique em Salvar</b></span></button></li>
+  </ol>
+  <nav class="pager"><a href="#recursos"><small>Anterior</small>O que dá para fazer</a><a class="next" href="#inicio"><small>Voltar</small>Início</a></nav>
+</section>
+</main>
+</div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const KEY='buk-ajuda-passos';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+let done=load();
+const PAGES={inicio:'Início',livres:'Pesquisas Livres',clima:'Pesquisas de Clima',admin:'Manual do administrador de Clima',workflow:'Workflow',recursos:'O que dá para fazer com Workflow',atributos:'Atributos personalizados'};
+
+/* routing */
+const side=$('#side'), menuBtn=$('#menuBtn');
+function route(){
+  let id=(location.hash||'').slice(1); if(!PAGES[id]) id='inicio';
+  $$('.page').forEach(p=>p.classList.toggle('on',p.dataset.page===id));
+  $$('[data-nav]').forEach(a=>{ if(a.dataset.nav===id) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+  document.title=(id==='inicio'?'Central de ajuda Buk':PAGES[id]+' – Central de ajuda Buk');
+  side.classList.remove('open'); menuBtn&&menuBtn.setAttribute('aria-expanded','false');
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+menuBtn&&menuBtn.addEventListener('click',()=>{const o=side.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o)});
+document.addEventListener('click',e=>{ if(side.classList.contains('open') && !side.contains(e.target) && e.target!==menuBtn) {side.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')} });
+
+/* steps + progress */
+function refresh(){
+  Object.keys(PAGES).forEach(pid=>{
+    const page=$(`.page[data-page="${pid}"]`); if(!page) return;
+    const steps=$$('[data-step]',page); const n=steps.filter(b=>done[b.dataset.step]).length;
+    const pct=steps.length?Math.round(n/steps.length*100):0;
+    const t=$('.progress .track i',page); if(t) t.style.width=pct+'%';
+    const l=$('.progress .pct',page); if(l) l.textContent=`${n} de ${steps.length} passos concluídos`;
+    const nb=$(`[data-nav="${pid}"] .bar i`); if(nb) nb.style.width=pct+'%';
+    const mb=$(`[data-mini="${pid}"] i`); if(mb) mb.style.width=pct+'%';
+  });
+}
+$$('[data-step]').forEach(b=>{
+  b.setAttribute('aria-pressed',done[b.dataset.step]?'true':'false');
+  b.addEventListener('click',e=>{ if(e.target.closest('a')) return; const k=b.dataset.step; if(done[k]) delete done[k]; else done[k]=1; b.setAttribute('aria-pressed',done[k]?'true':'false'); save(done); refresh(); });
+});
+$$('.reset').forEach(r=>r.addEventListener('click',()=>{ const page=r.closest('.page'); $$('[data-step]',page).forEach(b=>{delete done[b.dataset.step];b.setAttribute('aria-pressed','false')}); save(done); refresh(); }));
+
+/* in-page jumps */
+$$('[data-jump]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.getElementById(a.dataset.jump);t&&t.scrollIntoView({behavior:'smooth',block:'start'})}));
+
+/* generic pressed-group helper */
+function group(container,onPick){
+  const btns=$$('button',container);
+  btns.forEach(b=>b.addEventListener('click',()=>{btns.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));onPick(b)}));
+  const cur=btns.find(b=>b.getAttribute('aria-pressed')==='true')||btns[0]; onPick(cur);
+}
+/* switch panels */
+$$('[data-switch]').forEach(c=>{const name=c.dataset.switch; group(c,b=>{$$(`[data-switch-panel="${name}"]`).forEach(p=>p.hidden=p.dataset.opt!==b.dataset.opt)})});
+
+/* tabs */
+$$('.tabs').forEach(tl=>{
+  const tabs=$$('[role=tab]',tl), page=tl.closest('.page');
+  function sel(t,focus){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1});$$('[data-tabpanel]',page).forEach(p=>p.hidden=p.dataset.tabpanel!==t.dataset.tab);if(focus)t.focus()}
+  tabs.forEach((t,i)=>{t.addEventListener('click',()=>sel(t));t.addEventListener('keydown',e=>{let j=null;if(e.key==='ArrowRight')j=(i+1)%tabs.length;if(e.key==='ArrowLeft')j=(i-1+tabs.length)%tabs.length;if(j!==null){e.preventDefault();sel(tabs[j],true)}})});
+  sel(tabs[0]);
+});
+
+/* question type previews */
+const Q={
+  curta:['Resposta curta','Pergunta aberta, até 100 caracteres.',()=>`<div class="q">Qual é o seu prato preferido no refeitório?</div><input type="text" maxlength="100" data-count><div class="count">0/100</div>`],
+  paragrafo:['Parágrafo','Pergunta aberta, até 300 caracteres. Na Pesquisa de Clima, pode passar pela análise de sentimentos.',()=>`<div class="q">O que você precisaria para ser 100% feliz no trabalho?</div><textarea maxlength="300" data-count></textarea><div class="count">0/300</div>`],
+  unica:['Seleção única','Pergunta fechada: o colaborador marca uma opção. Na Pesquisa de Clima, cadastre as opções da menor para a maior satisfação.',(k)=>`<div class="q">Como você avalia a comunicação interna?</div>${['Muito ruim','Ruim','Regular','Boa','Muito boa'].map(o=>`<label><input type="radio" name="u-${k}"> ${o}</label>`).join('')}`],
+  multipla:['Seleção múltipla','Pergunta fechada: o colaborador marca quantas opções quiser.',()=>`<div class="q">Quais benefícios você mais usa?</div>${['Vale-refeição','Plano de saúde','Gympass','Auxílio home office'].map(o=>`<label><input type="checkbox"> ${o}</label>`).join('')}`],
+  linear:['Escala linear','Pergunta fechada: o colaborador escolhe um ponto na escala numérica que você configurar.',()=>`<div class="q">Você gostaria de participar do amigo secreto?</div><div class="scale">${[1,2,3,4,5].map(n=>`<button type="button">${n}</button>`).join('')}</div><div class="scale-ends" style="max-width:230px"><span>Não quero</span><span>Quero muito</span></div>`],
+  importancia:['Importância relativa','Pergunta fechada: o colaborador ordena as opções da mais para a menos importante.',()=>`<div class="q">Ordene o que mais pesa para você:</div><ol class="rank">${['Salário','Flexibilidade','Desenvolvimento','Ambiente'].map(o=>`<li><span>${o}</span><button type="button" data-up aria-label="Subir">↑</button><button type="button" data-down aria-label="Descer">↓</button></li>`).join('')}</ol>`],
+  nps:['NPS','Escala fixa de 0 a 10 baseada no Net Promoter Score. Só uma por pesquisa.',()=>`<div class="q">Qual a probabilidade de você recomendar a empresa como um bom lugar para trabalhar?</div><div class="scale">${Array.from({length:11},(_,n)=>`<button type="button">${n}</button>`).join('')}</div><div class="scale-ends"><span>Nada provável</span><span>Extremamente provável</span></div><p data-npsres style="margin-top:10px;font-weight:700"></p>`]
+};
+$$('[data-qset]').forEach(c=>{
+  const panel=$(`[data-qpanel="${c.dataset.qset}"]`);
+  group(c,b=>{
+    const [t,d,f]=Q[b.dataset.q]; panel.innerHTML=`<h4>${t}</h4><p>${d}</p><div class="qprev">${f(c.dataset.qset)}</div><span class="k">Exemplo interativo: experimente responder.</span>`;
+    const inp=$('[data-count]',panel); if(inp){const cnt=$('.count',panel);inp.addEventListener('input',()=>cnt.textContent=`${inp.value.length}/${inp.maxLength}`)}
+    $$('.scale',panel).forEach(s=>s.addEventListener('click',e=>{const x=e.target.closest('button');if(!x)return;$$('button',s).forEach(y=>y.classList.toggle('sel',y===x));const r=$('[data-npsres]',panel);if(r){const v=+x.textContent;r.textContent=v>=9?'Promotor':v>=7?'Neutro':'Detrator';r.style.color=v>=9?'var(--ok)':v>=7?'var(--mid)':'var(--bad)'}}));
+    $$('.rank',panel).forEach(l=>l.addEventListener('click',e=>{const li=e.target.closest('li');if(!li)return;if(e.target.matches('[data-up]')&&li.previousElementSibling)l.insertBefore(li,li.previousElementSibling);if(e.target.matches('[data-down]')&&li.nextElementSibling)l.insertBefore(li.nextElementSibling,li)}));
+  });
+});
+
+const fmt=(n,d=1)=>Number.isFinite(n)?n.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+const num=i=>Math.max(0,parseInt(i.value,10)||0);
+function stack(el,parts){el.innerHTML=parts.map(([v,c])=>`<i style="width:${v}%;background:${c}"></i>`).join('')}
+
+/* methodology calc */
+$$('[data-calc="metodo"]').forEach(c=>{
+  const ins=$$('input',c);
+  function run(){
+    const n=ins.map(num), tot=n.reduce((a,b)=>a+b,0);
+    const media=tot? n.reduce((a,v,i)=>a+v*(i+1),0)/tot : NaN;
+    const pos=tot?(n[3]+n[4])/tot*100:NaN, neg=tot?(n[0]+n[1])/tot*100:NaN, neu=tot?n[2]/tot*100:NaN;
+    const nhs=pos-neg;
+    $('[data-o=media]',c).textContent=fmt(media,2);
+    $('[data-o=prom]',c).textContent=Number.isFinite(pos)?fmt(pos)+'%':'–';
+    $('[data-o=nhs]',c).textContent=Number.isFinite(nhs)?(nhs>0?'+':'')+fmt(nhs):'–';
+    const L=$('[data-o=nhsLabel]',c);
+    if(!Number.isFinite(nhs)){L.textContent='';} else if(nhs<=0){L.textContent='A melhorar';L.style.color='var(--bad)'} else if(nhs<=50){L.textContent='Bom';L.style.color='var(--mid)'} else {L.textContent='Excelente';L.style.color='var(--ok)'}
+    stack($('[data-o=stack]',c),tot?[[neg,'var(--bad)'],[neu,'var(--mid)'],[pos,'var(--ok)']]:[]);
+  }
+  ins.forEach(i=>i.addEventListener('input',run)); run();
+});
+/* nps calc */
+$$('[data-calc="nps"]').forEach(c=>{
+  const ins=$$('input',c);
+  function run(){
+    const [d,n,p]=ins.map(num), t=d+n+p, nps=t?(p-d)/t*100:NaN;
+    $('[data-o=nps]',c).textContent=Number.isFinite(nps)?(nps>0?'+':'')+fmt(nps,0):'–';
+    $('[data-o=total]',c).textContent=t;
+    const L=$('[data-o=npsLabel]',c); L.textContent=!t?'':nps>0?'Mais promotores que detratores':nps<0?'Mais detratores que promotores':'Equilíbrio';
+    L.style.color=nps>0?'var(--ok)':nps<0?'var(--bad)':'var(--muted)';
+    stack($('[data-o=stack]',c),t?[[d/t*100,'var(--bad)'],[n/t*100,'var(--mid)'],[p/t*100,'var(--ok)']]:[]);
+  }
+  ins.forEach(i=>i.addEventListener('input',run)); run();
+});
+/* area checker */
+$$('[data-calc="areas"]').forEach(c=>{
+  const ul=$('.areas',c), msg=$('[data-o=areasMsg]',c);
+  function row(name,n){const li=document.createElement('li');li.innerHTML=`<input type="text" aria-label="Nome da área" value="${name}"><input type="number" min="0" inputmode="numeric" aria-label="Participantes" value="${n}"><span class="tag"></span><button type="button" class="icon-btn" aria-label="Remover área">×</button>`;ul.appendChild(li);$$('input',li).forEach(i=>i.addEventListener('input',run));$('button',li).addEventListener('click',()=>{li.remove();run()});}
+  function run(){
+    let bad=[],total=0;
+    $$('li',ul).forEach(li=>{const [nm,ct]=$$('input',li);const v=num(ct);const ok=v>=4;const tg=$('.tag',li);tg.className='tag '+(ok?'ok':'bad');tg.textContent=ok?'Cumpre':'Não cumpre';if(!ok){bad.push(nm.value||'Sem nome');total+=v}});
+    if(!$$('li',ul).length){msg.textContent='Adicione ao menos uma área.';return}
+    if(!bad.length){msg.innerHTML='<strong style="color:var(--ok)">Tudo certo.</strong> Todas as áreas têm 4 participantes ou mais.';return}
+    msg.innerHTML=`<strong style="color:var(--bad)">${bad.length} ${bad.length>1?'áreas não cumprem':'área não cumpre'}:</strong> ${bad.join(', ')}. `+(total>=4&&bad.length>1?`Juntas somam ${total} pessoas: dá para criar um novo grupo com elas.`:`Transfira participantes para elas ou una-as a uma área maior.`);
+  }
+  [['Comercial',12],['Contabilidade',2],['Folha',3],['Marketing',5]].forEach(a=>row(...a));
+  $('[data-add-area]',c).addEventListener('click',()=>{row('',0);run();$$('li input',ul).slice(-2)[0].focus()});
+  run();
+});
+/* heatmap */
+$$('[data-calc="heat"]').forEach(c=>{
+  const r=$('input[type=range]',c), v=$('[data-o=heatVal]',c), o=$('[data-o=heatOut]',c);
+  const B=[
+    {max:1.95,t:'Nota extremamente baixa',c:'var(--bad)',d:'Pode indicar problemas graves que afetam muito o clima.',a:'Identifique as razões críticas (os pontos de menor nota) e aja imediatamente.',p:'Curto prazo: reuniões de equipe ou qualquer ação imediata sobre as razões críticas.'},
+    {max:3.95,t:'Nota moderadamente baixa',c:'var(--mid)',d:'Problemas não críticos, mas que afetam a moral e a satisfação.',a:'Analise tendências e padrões, veja o que está relacionado e monte uma estratégia.',p:'Médio prazo: pesquisas adicionais, sessões de feedback, treinamentos e ajustes em políticas.'},
+    {max:9,t:'Nota alta',c:'var(--ok)',d:'Um ponto forte do clima.',a:'Continue monitorando e invista em desenvolvimento contínuo.',p:'Longo prazo: desenvolvimento de lideranças, bem-estar, comunicação interna, pesquisas livres pós-ação e comparação com a próxima pesquisa de clima.'}];
+  function run(){const x=+r.value;v.textContent=fmt(x);const b=B.find(b=>x<=b.max);o.innerHTML=`<h4 style="margin:0 0 6px;color:${b.c}">${b.t}</h4><p>${b.d}</p><p><strong>Recomendação:</strong> ${b.a}</p><p style="margin:0"><strong>Plano de ação:</strong> ${b.p}</p>`}
+  r.addEventListener('input',run);run();
+});
+/* permissions */
+(function(){
+  const st={perfil:'leitura',limite:'sem',fase:'andamento'}; const out=$('[data-o=perm]'); if(!out) return;
+  function run(){
+    let items,extra='';
+    if(st.fase==='andamento'){
+      items=st.perfil==='leitura'?['Participantes','Detalhe de áreas','Baixar dados','Ver formulário']:['Participantes','Transferir, inativar e apagar respostas de participantes','Detalhe de áreas','Baixar dados','Ver formulário','Enviar lembretes','Finalizar a pesquisa'];
+    } else {
+      items=['Resumo dos resultados','Resultados por pergunta','Comentários','Avançado (mapa de calor)','Detalhe de áreas','Download da base de resultados'];
+      extra=st.perfil==='leitura'?'Vê os comentários, mas não pode reclassificá-los.':'Pode reclassificar comentários como positivo, negativo ou neutro e rodar Analisar Sentimentos.';
+    }
+    const lim=st.limite==='com'?'<p class="k" style="margin-top:0">Vê só as informações das áreas compartilhadas com ele.</p>':'';
+    out.innerHTML=`<h4>${st.perfil==='leitura'?'Leitura':'Modificação'}, ${st.limite==='com'?'com áreas limitadas':'todas as áreas'}</h4>${lim}<ul class="plain">${items.map(i=>`<li>${i}</li>`).join('')}</ul>${extra?`<p style="margin:0">${extra}</p>`:''}`;
+  }
+  $$('[data-perm]').forEach(c=>group(c,b=>{st[c.dataset.perm]=b.dataset.opt;run()}));
+})();
+/* workflow types */
+const WF={
+  busca:['Busca','Busca de pessoal.','Abre um processo seletivo.','Requer o módulo de Seleção. Atributos: entidade Seleção.'],
+  admissao:['Admissão','Contratação.','Cria a ficha do colaborador como ativo.','Atributos: entidade Colaborador.'],
+  mov:['Movimentação','Mudança interna (salário, cargo, área…).','Aplica a alteração na ficha do colaborador.','Atributos: entidade Trabalho.'],
+  desl:['Desligamento','Encerrar o vínculo de trabalho.','Desliga o colaborador e inativa a ficha.','Atributos: entidade Trabalho.'],
+  flex:['Flexível','Etapas de aprovação e notificações sob medida.','Não está ligado a nenhum processo. Bom para despesas de viagem, ordens de compra e reembolsos.',''],
+  pre:['Pré-admissão','Coletar os dados de contratação do candidato.','Cria um fluxo de admissão.','Requer o módulo de Onboarding. Atributos: entidade Colaborador.']
+};
+$$('[data-wftype]').forEach(c=>group(c,b=>{const [t,o,r,n]=WF[b.dataset.opt];$('[data-o=wftype]').innerHTML=`<h4>${t}</h4><p><strong>Objetivo:</strong> ${o}</p><p><strong>Resultado:</strong> ${r}</p>${n?`<span class="k">${n}</span>`:''}`}));
+const FL={
+  sol:['Solicitação','Alguém abre o pedido em Solicitações, preenchendo o formulário da etapa inicial. A primeira etapa nunca tem dependência.'],
+  etapas:['Etapas','Cada passo ou aprovação do processo. Para cada etapa você define formulário, permissões (quem aprova) e dependências.'],
+  notif:['Notificações','E-mails automáticos para o responsável pela etapa, o solicitante ou um e-mail específico, enviados quando a dependência é cumprida.'],
+  gat:['Gatilho (resultado final)','O status que dispara o resultado do fluxo: cria a ficha, aplica a movimentação, desliga o colaborador ou abre a seleção. Workflows flexíveis não têm resultado definido.']
+};
+$$('[data-flow]').forEach(c=>{ if(c.tagName!=='DIV') return; group(c,b=>{const [t,d]=FL[b.dataset.opt];$('[data-o=flow]').innerHTML=`<h4>${t}</h4><p style="margin:0">${d}</p>`})});
+const FS={
+  leitura:['Leitura','A pessoa vê o valor, mas não pode alterar. Útil para mostrar dados preenchidos em etapas anteriores.','<input type="text" value="Analista de RH" disabled>'],
+  opc:['Editável opcional','A pessoa pode preencher ou deixar em branco.','<input type="text" placeholder="Opcional">'],
+  obr:['Editável obrigatório','A etapa só avança com o campo preenchido. Use para os dados que o resultado do fluxo exige.','<input type="text" placeholder="Obrigatório" required aria-required="true" style="border-color:var(--bad)"><div class="count" style="text-align:left;color:var(--bad)">Campo obrigatório</div>']
+};
+$$('[data-fieldstate]').forEach(c=>group(c,b=>{const [t,d,h]=FS[b.dataset.opt];$('[data-o=fieldstate]').innerHTML=`<h4>${t}</h4><p>${d}</p><div class="qprev"><div class="q">Cargo</div>${h}</div>`}));
+const ST={aprovado:'A etapa foi aprovada. É o status padrão que libera a próxima.',erro:'A etapa teve um erro na execução. Configure uma notificação para alguém agir.',devolvido:'O aprovador devolveu a solicitação à etapa anterior porque algum dado precisa ser corrigido.',rejeitado:'A solicitação foi rejeitada e o fluxo não continua.',aguardando:'A etapa está esperando aprovação. Bom momento para avisar o responsável.'};
+$$('[data-status]').forEach(c=>group(c,b=>{$('[data-o=status]').innerHTML=`<h4>${b.textContent.trim()}</h4><p style="margin:0">${ST[b.dataset.opt]}</p>`}));
+/* automations */
+(function(){
+  const st={gat:'Admissão',acao:'doc'}, out=$('[data-o=auto]'); if(!out) return;
+  const A={doc:['gerar os documentos','Requer os módulos de Documentos e Assinatura e de Gestão Documental.'],pesq:['adicionar o colaborador a uma Pesquisa Livre','Requer o módulo de Pesquisas.'],tarefa:['gerar uma tarefa pendente','Não requer módulo adicional.'],ativos:['abrir uma solicitação de ativos','Requer o módulo de Gestão de Ativos contratado.'],curso:['inscrever o colaborador em um curso','Requer o módulo de Treinamentos contratado.']};
+  function run(){const [a,r]=A[st.acao];out.innerHTML=`<p style="font-size:1.15rem;margin-bottom:6px">Quando um fluxo de <strong>${st.gat}</strong> for disparado, a Buk vai <strong>${a}</strong>.</p><span class="k" style="margin:0">${r}</span>`}
+  $$('[data-auto]').forEach(c=>group(c,b=>{st[c.dataset.auto]=b.dataset.opt;run()}));
+})();
+/* entity */
+$$('[data-entity]').forEach(c=>group(c,b=>{$('[data-o=entity]').innerHTML=`<p style="margin:0;font-size:1.15rem">Para fluxos de <strong>${b.dataset.flow}</strong>, crie o atributo na entidade <strong>${b.dataset.opt}</strong>.</p>`}));
+/* table filter */
+$$('[data-filter]').forEach(i=>{const t=$(`[data-filtered="${i.dataset.filter}"]`);i.addEventListener('input',()=>{const q=norm(i.value);$$('tbody tr',t).forEach(tr=>tr.hidden=q&&!norm(tr.textContent).includes(q))})});
+
+/* search */
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+const idx=[];
+$$('.page').forEach(p=>{const pid=p.dataset.page;if(pid==='inicio')return;
+  $$('h2,h3,.steps .t,.feats li,summary,td:first-child,.panel h4,.note p',p).forEach(el=>{const tab=el.closest('[data-tabpanel]');idx.push({pid,el,tab:tab&&tab.dataset.tabpanel,text:el.textContent.trim().replace(/\s+/g,' ')})});
+});
+const q=$('#q'), res=$('#results');
+q.addEventListener('input',()=>{
+  const s=norm(q.value.trim()); if(s.length<2){res.classList.remove('on');res.innerHTML='';return}
+  const hits=idx.filter(x=>norm(x.text).includes(s)).slice(0,12);
+  res.innerHTML=hits.length?hits.map((h,i)=>`<a href="#${h.pid}" data-hit="${idx.indexOf(h)}"><small>${PAGES[h.pid]}</small>${h.text.length>90?h.text.slice(0,90)+'…':h.text}</a>`).join(''):'<p>Nada encontrado. Tente outra palavra.</p>';
+  res.classList.add('on');
+});
+res.addEventListener('click',e=>{const a=e.target.closest('[data-hit]');if(!a)return;e.preventDefault();const h=idx[+a.dataset.hit];
+  if(location.hash!=='#'+h.pid){location.hash=h.pid}else route();
+  setTimeout(()=>{ if(h.tab){const t=$(`[data-tab="${h.tab}"]`);t&&t.click()}
+    const d=h.el.closest('details'); if(d) d.open=true;
+    h.el.scrollIntoView({behavior:'smooth',block:'center'}); h.el.style.transition='background .6s'; h.el.style.background='var(--sun-soft)'; setTimeout(()=>h.el.style.background='',1800);
+  },60);
+  res.classList.remove('on'); q.value='';
+});
+q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';res.classList.remove('on')}});
+
+refresh(); route();
+})();
+</script>
+</body>
+</html>
